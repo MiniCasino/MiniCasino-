@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Casino</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+            position: relative;
+            background-color: black;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 150vh; /* Erhöht die Höhe der Seite */
+        }
+        #coins {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            z-index: 1000; /* Stellt sicher, dass das Münzguthaben immer oben bleibt */
+            text-shadow: 1px 1px 2px black; /* Schwarze Umrandung */
+        }
+        #resetButton {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            z-index: 1000; /* Stellt sicher, dass der Button immer oben bleibt */
+        }
+        #resetButton:hover {
+            background-color: #d32f2f;
+        }
+        .button {
+            padding: 15px 30px;
+            margin: 20px;
+            cursor: pointer;
+            background-color: #2196F3; /* Blau */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .button:hover {
+            background-color: #1976D2; /* Dunkleres Blau */
+        }
+        .button span {
+            font-size: 12px;
+        }
+        .button:disabled {
+            background-color: #888;
+            cursor: not-allowed;
+        }
+        hr {
+            width: 80%;
+            border: 1px solid white;
+            margin: 40px 0; /* Erhöht den Abstand zwischen den Elementen */
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px; /* Abstand zwischen den Quadraten */
+        }
+        .square {
+            width: 50px;
+            height: 50px;
+            background-color: #2196F3; /* Blau */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            color: white;
+            font-weight: bold;
+        }
+        .blink {
+            animation: blink 0.5s infinite;
+        }
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <p id="coins">Münzen: 100</p>
+    <button id="resetButton" onclick="resetGame()">Reset</button>
+    <h1>Mini Casino</h1>
+    <button class="button" id="playButton" onclick="playGame()">Kleines Spiel <span>(10 Münzen)</span></button>
+    <p id="message"></p>
+    <hr>
+    <button class="button" id="playButton2" onclick="playGame2()">Großes Spiel <span>(15 Münzen)</span></button>
+    <p id="message2"></p>
+    <hr>
+    <div class="grid">
+        <div class="square" id="square1">1</div>
+        <div class="square" id="square2">2</div>
+        <div class="square" id="square3">3</div>
+        <div class="square" id="square4">4</div>
+        <div class="square" id="square5">5</div>
+        <div class="square" id="square6">6</div>
+        <div class="square" id="square7">7</div>
+        <div class="square" id="square8">8</div>
+        <div class="square" id="square9">9</div>
+    </div>
+    <button class="button" id="spinButton" onclick="spin()">Spin <span>(20 Münzen)</span></button>
+    <p id="message3"></p>
+    <p id="rewardMessage"></p> <!-- Neuer Absatz für die Belohnung -->
+
+    <script>
+        let coins = 100;
+
+        function resetGame() {
+            coins = 100;
+            document.getElementById('coins').innerText = 'Münzen: ' + coins;
+            document.getElementById('message').innerText = '';
+            document.getElementById('message2').innerText = '';
+            document.getElementById('message3').innerText = '';
+            document.getElementById('rewardMessage').innerText = ''; // Belohnungsnachricht zurücksetzen
+        }
+
+        function playGame() {
+            const button = document.getElementById('playButton');
+            button.disabled = true;
+
+            if (coins < 10) {
+                document.getElementById('message').innerText = 'Nicht genug Münzen!';
+                button.disabled = false;
+                return;
+            }
+
+            coins -= 10;
+            const win = Math.random() < 0.5; // 50% Gewinnchance
+            if (win) {
+                coins += 20;
+                document.getElementById('message').innerText = 'Du hast gewonnen! +20 Münzen';
+            } else {
+                document.getElementById('message').innerText = 'Du hast verloren!';
+            }
+
+            document.getElementById('coins').innerText = 'Münzen: ' + coins;
+
+            setTimeout(() => {
+                button.disabled = false;
+            }, 3000); // 3 Sekunden warten
+        }
+
+        function playGame2() {
+            const button = document.getElementById('playButton2');
+            button.disabled = true;
+
+            if (coins < 15) {
+                document.getElementById('message2').innerText = 'Nicht genug Münzen!';
+                button.disabled = false;
+                return;
+            }
+
+            coins -= 15;
+            const win = Math.random() < 0.3; // 30% Gewinnchance
+            if (win) {
+                coins += 50;
+                document.getElementById('message2').innerText = 'Du hast gewonnen! +50 Münzen';
+            } else {
+                document.getElementById('message2').innerText = 'Du hast verloren!';
+            }
+
+            document.getElementById('coins').innerText = 'Münzen: ' + coins;
+
+            setTimeout(() => {
+                button.disabled = false;
+            }, 3000); // 3 Sekunden warten
+        }
+        function spin() {
+            const spinButton = document.getElementById('spinButton');
+            spinButton.disabled = true;
+
+            if (coins < 20) {
+                document.getElementById('message3').innerText = 'Nicht genug Münzen!';
+                spinButton.disabled = false;
+                return;
+            }
+
+            coins -= 20;
+            document.getElementById('coins').innerText = 'Münzen: ' + coins;
+
+            const squares = document.querySelectorAll('.square');
+            const randomIntervals = Array.from({ length: squares.length }, () => Math.random() * 500);
+
+            squares.forEach((square, index) => {
+                setTimeout(() => {
+                    square.classList.add('blink');
+                }, randomIntervals[index]);
+            });
+
+            setTimeout(() => {
+                squares.forEach(square => square.classList.remove('blink'));
+
+                const randomIndex = Math.floor(Math.random() * squares.length);
+                const selectedSquare = squares[randomIndex];
+
+                selectedSquare.classList.add('blink');
+
+                setTimeout(() => {
+                    selectedSquare.classList.remove('blink');
+                    spinButton.disabled = false;
+
+                    const selectedNumber = parseInt(selectedSquare.textContent);
+                    let reward = 0;
+
+                    if (selectedNumber === 3) {
+                        reward = 20;
+                    } else if ([4, 5, 6].includes(selectedNumber)) {
+                        reward = 40;
+                    } else if ([7, 8].includes(selectedNumber)) {
+                        reward = 60;
+                    } else if (selectedNumber === 9) {
+                        reward = 100;
+                    }
+
+                    coins += reward;
+                    document.getElementById('coins').innerText = 'Münzen: ' + coins;
+                    document.getElementById('message3').innerText = reward > 0 ? 'Du hast gewonnen! +' + reward + ' Münzen' : 'Du hast verloren!';
+                    document.getElementById('rewardMessage').innerText = 'Gewonnene Münzen: ' + reward; // Belohnungsnachricht anzeigen
+                }, 1000); // 1 Sekunde warten
+            }, 3000); // 3 Sekunden warten
+        }
+    </script>
+</body>
+</html>
